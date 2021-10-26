@@ -80,7 +80,7 @@ public class GradeController {
             userRepo.save(usr);
         }
     }
-    @PostMapping(path = "/{gradeId}/change")
+    @PutMapping(path = "/{gradeId}/change")
     public ResponseEntity<GradeDTO> changeGradeName(@Valid @RequestBody GradeForm newName,
                                                     @PathVariable("gradeId") Long gradeId, Errors errors){
         if(errors.hasErrors() || !gradeRepo.existsById(gradeId)) {
