@@ -40,6 +40,6 @@ public class Student {
             this.payments.forEach(payment -> payments.add(payment.toDTO()));
         }
         return new StudentDTO(id.toString(), fullname,
-                paymentsSum.toString(), payments);
+                paymentsSum, payments);
     }
 }

@@ -2,23 +2,20 @@ package skarbnikApp;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 @Data
 public class PayOffForm {
 
-    @NotBlank(message="Pole nie może być puste")
     @NotNull(message = "Pole nie może być puste")
+    @Size(min = 1, max = 20, message = "nazwa klasy musi mieć od 1 do 20 znaków")
     private String name;
 
-    @NotNull(message = "pole nie może być puste")
-    @NotBlank(message="Pole nie może być puste")
+    @NotNull(message = "Pole nie może być puste")
     @Positive(message="Podaj dodatnią kwotę")
-    @Pattern(regexp="^\\d+(\\.\\d\\d?)?$", message="Podaj prawidłową kwotę")
+    @Pattern(regexp="^\\d+(\\.\\d\\d?)?$",
+            message="Podaj kwotę w formacie liczbowym w przypadku części dziesiętnych użyj < . > np. 5.55")
     private String value;
 
     public PayOff toPayOff(Long gradeId) {

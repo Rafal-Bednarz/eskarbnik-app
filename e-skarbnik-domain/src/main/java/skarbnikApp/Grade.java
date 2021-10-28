@@ -49,7 +49,7 @@ public class Grade {
                 payOffs.add(payOff.toDTO());
             });
         }
-        return new GradeDTO(id.toString(), name, budget.toString(),
+        return new GradeDTO(id.toString(), name, budget,
                 students, payOffs);
     }
 }

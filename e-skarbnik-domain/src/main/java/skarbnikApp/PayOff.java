@@ -36,7 +36,7 @@ public class PayOff {
 
     public PayOffDTO toDTO() {
         return new PayOffDTO(DateService.dateConverter(createdAt),
-                name, value.toString());
+                name, value);
     }
 }
 

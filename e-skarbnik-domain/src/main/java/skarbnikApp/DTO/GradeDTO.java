@@ -2,6 +2,8 @@ package skarbnikApp.DTO;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -11,7 +13,7 @@ public class GradeDTO {
     @Getter
     private final String name;
     @Getter
-    private final String budget;
+    private final BigDecimal budget;
     @Getter
     private final List<StudentDTO> students;
     @Getter

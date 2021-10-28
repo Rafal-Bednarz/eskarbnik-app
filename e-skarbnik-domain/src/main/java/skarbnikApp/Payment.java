@@ -32,7 +32,7 @@ public class Payment {
     }
 
     public PaymentDTO toDTO() {
-        return new PaymentDTO(DateService.dateConverter(placedAt), value.toString());
+        return new PaymentDTO(DateService.dateConverter(placedAt), value);
     }
 
 }

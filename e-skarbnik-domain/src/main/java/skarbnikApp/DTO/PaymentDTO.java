@@ -3,6 +3,8 @@ package skarbnikApp.DTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
+
 @RequiredArgsConstructor
 public class PaymentDTO {
 
@@ -10,6 +12,6 @@ public class PaymentDTO {
     private final String placedAt;
 
     @Getter
-    private final String value;
+    private final BigDecimal value;
 
 }

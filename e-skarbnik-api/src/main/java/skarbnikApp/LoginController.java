@@ -1,10 +1,12 @@
 package skarbnikApp;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import skarbnikApp.data.UserRepository;
+import skarbnikApp.services.RequestException;
 
 import javax.validation.Valid;
 
@@ -19,15 +21,20 @@ public class LoginController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public boolean login(@Valid @RequestBody UserFormLogin userForm, Errors errors) {
-        if(errors.hasErrors()) {
-            return false;
+    public ResponseEntity<Boolean> login(@Valid @RequestBody UserFormLogin userForm) {
+
+        if (!repo.existsByUsername(userForm.getUsername())) {
+            throw new RequestException("Nieprawidłowy login");
         }
-        if (repo.existsByUsername(userForm.getUsername())) {
-            User user = repo.findByUsername(userForm.getUsername());
-            return  passwordEncoder.matches(userForm.getPassword(), user.getPassword())
-                    && user.isEnabled();
+        User user = repo.findByUsername(userForm.getUsername());
+        if(!passwordEncoder.matches(userForm.getPassword(), user.getPassword())) {
+            throw new RequestException("Nieprawidłowe hasło");
         }
-        return false;
+        if(!user.isEnabled()) {
+            throw new RequestException("Konto nieaktywne");
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Boolean.TRUE);
     }
 }

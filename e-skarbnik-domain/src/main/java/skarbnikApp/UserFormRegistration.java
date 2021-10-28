@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Random;
@@ -15,18 +14,16 @@ import java.util.Random;
 public class UserFormRegistration {
 
     @NotNull(message = "pole nie może być puste")
-    @NotBlank(message = "pole nie może być puste")
     @Pattern(regexp = "^[A-Za-z0-9]{3}[A-Za-z0-9]*$")
     private final String username;
 
     @NotNull(message = "pole nie może być puste")
-    @NotBlank(message = "pole nie może być puste")
     @Email(message = "pole musi być prawidłowym adresem email")
     private final String email;
 
-    @NotBlank
+    @NotNull(message = "Pole nie może być puste")
     @Pattern(regexp = "^[A-Za-z0-9!@#$%&?]{5}[A-Za-z0-9!@#$%&?]*$",
-            message = "zbyt mało znaków, lub użyto niedopuszczalnych znaków")
+            message = "pole musi mieć conajmniej 5 znaków, lub użyto niedopuszczalnych znaków")
     private final String password;
 
     public User toUser(PasswordEncoder passwordEncoder) {

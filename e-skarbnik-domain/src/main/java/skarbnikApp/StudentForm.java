@@ -9,8 +9,7 @@ import javax.validation.constraints.Pattern;
 @Data
 public class StudentForm {
 
-    @NotNull(message = "pole nie może być puste")
-    @NotBlank(message = "Pole nie może być puste")
+    @NotNull(message = "Pole nie może być puste")
     @Pattern(regexp = "^[A-ZŻŁĆŚŹ][a-złąęńóśćźż]+(\\s(\\-\\s)?[A-ZŻŁĆŚŹ][a-złąęńóśćźż]+)+$",
             message="Nieprawidłowy format imienia i nazwiska")
     private String fullname;

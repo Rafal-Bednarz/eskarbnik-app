@@ -1,17 +1,14 @@
 package skarbnikApp;
 
 import lombok.Data;
-
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
 public class GradeForm {
 
-    @NotBlank(message="pole nie może być puste")
     @NotNull(message="pole nie może być puste")
-    @Pattern(regexp = "^[A-ZŁŚĆŻŹÓĄĘŃa-złąęćśźżńó0-9]+$")
+    @Size(min = 1, max = 10, message = "nazwa klasy musi mieć od 1 do 10 znaków")
     private String name;
 
     public Grade toGrade(Long userId) {
