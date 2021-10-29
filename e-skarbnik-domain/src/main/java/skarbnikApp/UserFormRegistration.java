@@ -14,7 +14,8 @@ import java.util.Random;
 public class UserFormRegistration {
 
     @NotNull(message = "pole nie może być puste")
-    @Pattern(regexp = "^[A-Za-z0-9]{3}[A-Za-z0-9]*$")
+    @Pattern(regexp = "^[A-Za-z0-9]{3}[A-Za-z0-9]*$",
+            message = "nazwa musi mieć conajmniej 3 znaki, lub użyto niedopuszczalnych znaków")
     private final String username;
 
     @NotNull(message = "pole nie może być puste")

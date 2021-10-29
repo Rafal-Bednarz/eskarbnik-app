@@ -4,14 +4,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -22,29 +22,28 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
-        List<String> errors = new ArrayList<String>();
-        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.add(error.getField() + ": " + error.getDefaultMessage());
-        }
-        for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-            errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
+        List<String> messages = new ArrayList<String>();
+        for (FieldError error : ex.getFieldErrors()) {
+            messages.add(error.getField() + ": "+ error.getDefaultMessage());
         }
 
         ApiError apiError =
-                new ApiError(HttpStatus.BAD_REQUEST, errors);
+                new ApiError(HttpStatus.BAD_REQUEST, "błąd walidacji",
+                        !messages.isEmpty() ? messages.get(0) : "");
         return handleExceptionInternal(
                 ex, apiError, headers, apiError.getStatus(), request);
     }
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Object> handleMethodNoSuchElement(NoSuchElementException ex,
+    @ExceptionHandler(CustomNoSuchElementException.class)
+    public ResponseEntity<Object> handleMethodNoSuchElement(CustomNoSuchElementException ex,
                                                             WebRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, Arrays.asList("Brak treści, nieprawidłowa ścieżka"));
-        return new ResponseEntity<Object>(apiError, apiError.getStatus());
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST
+                , "Nieprawidłowa ścieżka" , ex.getError());
+        return handleExceptionInternal(ex, apiError, HttpHeaders.EMPTY, apiError.getStatus(), request);
     }
     @ExceptionHandler(RequestException.class)
-    public ResponseEntity<Object> handleMethodRequest(RequestException ex) {
+    public ResponseEntity<Object> handleMethodRequest(RequestException ex, WebRequest request) {
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, Arrays.asList(ex.getMessage()));
-        return new ResponseEntity<Object>( apiError, apiError.getStatus());
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST,  ex.getMessage(), ex.getError());
+        return handleExceptionInternal(ex, apiError, HttpHeaders.EMPTY, apiError.getStatus(), request);
     }
 }

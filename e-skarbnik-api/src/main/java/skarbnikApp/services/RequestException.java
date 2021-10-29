@@ -1,8 +1,13 @@
 package skarbnikApp.services;
 
-public class RequestException extends RuntimeException {
+import lombok.Getter;
 
-    public RequestException(String message) {
+public class RequestException extends RuntimeException {
+    @Getter
+    String error;
+
+    public RequestException(String message, String error) {
         super(message);
+        this.error = error;
     }
 }

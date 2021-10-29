@@ -3,17 +3,17 @@ package skarbnikApp.services;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
-
 @Data
 public class ApiError {
 
     private HttpStatus status;
-    private List<String> messages;
+    private String message;
+    private String error;
 
-    public ApiError(HttpStatus status, List<String> messages) {
+    public ApiError(HttpStatus status, String message, String error) {
         super();
         this.status = status;
-        this.messages = messages;
+        this.message = message;
+        this.error = error;
     }
 }

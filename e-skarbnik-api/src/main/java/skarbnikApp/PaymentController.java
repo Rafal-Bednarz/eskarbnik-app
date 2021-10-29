@@ -8,7 +8,7 @@ import skarbnikApp.DTO.PaymentDTO;
 import skarbnikApp.data.GradeRepository;
 import skarbnikApp.data.PaymentRepository;
 import skarbnikApp.data.StudentRepository;
-import skarbnikApp.services.RequestException;
+import skarbnikApp.services.CustomNoSuchElementException;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -29,10 +29,14 @@ public class PaymentController {
     public ResponseEntity<PaymentDTO> addPayment(@PathVariable("studentId") Long studentId,
                                                  @PathVariable("gradeId") Long gradeId,
                                                  @RequestBody @Valid PaymentForm form) {
-        Grade grade = gradeRepo.findById(gradeId).orElseThrow();
-        Student student = studentRepo.findById(studentId).orElseThrow();
+        Grade grade = gradeRepo.findById(gradeId).orElseThrow(
+                () -> new CustomNoSuchElementException(gradeId.toString())
+        );
+        Student student = studentRepo.findById(studentId).orElseThrow(
+                () -> new CustomNoSuchElementException(studentId.toString())
+        );
         if(!grade.getStudents().contains(student)) {
-            throw new RequestException("Brak treści, nieprawidłowa ścieżka");
+            throw new CustomNoSuchElementException("/" + gradeId + "/" + studentId);
         }
         Payment payment = form.toPayment(studentId);
         List<Payment> payments = student.getPayments();

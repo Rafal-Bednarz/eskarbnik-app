@@ -9,6 +9,8 @@ import skarbnikApp.DTO.GradeDTO;
 import skarbnikApp.DTO.PayOffDTO;
 import skarbnikApp.DTO.StudentDTO;
 import skarbnikApp.data.*;
+import skarbnikApp.services.CustomNoSuchElementException;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,10 +36,11 @@ public class GradeController {
         usr.getGrades().forEach(grade -> grades.add(grade.toDTO()));
         return new ResponseEntity<List<GradeDTO>>(grades, HttpStatus.OK);
     }
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<GradeDTO> getGrade(@PathVariable("id") Long id) {
+    @GetMapping(path = "/{gradeId}")
+    public ResponseEntity<GradeDTO> getGrade(@PathVariable("gradeId") Long gradeId) {
 
-        Grade grade = gradeRepo.findById(id).get();
+        Grade grade = gradeRepo.findById(gradeId).orElseThrow(
+                () -> new CustomNoSuchElementException(gradeId.toString()));
             return new ResponseEntity<GradeDTO>(grade.toDTO(), HttpStatus.OK);
 
     }
@@ -55,10 +58,13 @@ public class GradeController {
     }
     @DeleteMapping(path = "/{gradeId}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteGrade(@AuthenticationPrincipal User user, @PathVariable("gradeId") Long gradeId){
-            User usr = userRepo.findByUsername(user.getUsername());
-            List<Grade> grades = usr.getGrades();
-            Grade grade = gradeRepo.findById(gradeId).orElseThrow();
+    public void deleteGrade(@AuthenticationPrincipal User user, @PathVariable("gradeId") Long gradeId) {
+        User usr = userRepo.findByUsername(user.getUsername());
+        List<Grade> grades = usr.getGrades();
+        Grade grade = gradeRepo.findById(gradeId).orElseThrow(
+                () -> new CustomNoSuchElementException(gradeId.toString())
+        );
+        if (grades.contains(grade)) {
             grade.getStudents().forEach(student -> {
                 student.setPayments(Collections.emptyList());
                 paymentRepo.deleteAllByStudentId(student.getId());
@@ -70,25 +76,32 @@ public class GradeController {
             grades.remove(grade);
             userRepo.save(usr);
             gradeRepo.deleteById(gradeId);
+        }
     }
     @PutMapping(path = "/{gradeId}/change")
     public ResponseEntity<GradeDTO> changeGradeName(@Valid @RequestBody GradeForm newName,
                                                     @PathVariable("gradeId") Long gradeId){
 
-        Grade grade = gradeRepo.findById(gradeId).orElseThrow();
+        Grade grade = gradeRepo.findById(gradeId).orElseThrow(
+                () -> new CustomNoSuchElementException(gradeId.toString())
+        );
         grade.setName(newName.getName());
         gradeRepo.save(grade);
         return new ResponseEntity<GradeDTO>(grade.toDTO(), HttpStatus.CREATED);
     }
     @GetMapping(path = "/{gradeId}/students")
-    public ResponseEntity<List<StudentDTO>> getStudentsByGradeId(@PathVariable("gradeId") Long id) {
-        Grade grade = gradeRepo.findById(id).orElseThrow();
+    public ResponseEntity<List<StudentDTO>> getStudentsByGradeId(@PathVariable("gradeId") Long gradeId) {
+        Grade grade = gradeRepo.findById(gradeId).orElseThrow(
+                () -> new CustomNoSuchElementException(gradeId.toString())
+        );
         List<StudentDTO> students = grade.toDTO().getStudents();
         return new ResponseEntity<List<StudentDTO>>(students, HttpStatus.OK);
     }
     @GetMapping(path = "/{gradeId}/payOffs")
     public ResponseEntity<List<PayOffDTO>> getPayOffsByGradeId(@PathVariable("gradeId") Long gradeId) {
-        Grade grade = gradeRepo.findById(gradeId).orElseThrow();
+        Grade grade = gradeRepo.findById(gradeId).orElseThrow(
+                () -> new CustomNoSuchElementException(gradeId.toString())
+        );
         List<PayOffDTO> payOffs = grade.toDTO().getPayOffs();
         return new ResponseEntity<List<PayOffDTO>>(payOffs, HttpStatus.OK);
     }

@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import skarbnikApp.DTO.UserDTO;
 import skarbnikApp.data.UserRepository;
+import skarbnikApp.services.CustomNoSuchElementException;
 import skarbnikApp.services.RequestException;
 import skarbnikApp.services.SpringMailService;
 
@@ -27,10 +28,10 @@ public class RegistrationController {
     public ResponseEntity<String> registrationUser(@Valid @RequestBody UserFormRegistration userForm) {
         String token = "";
         if (userRepo.existsByUsername(userForm.getUsername())) {
-            throw new RequestException("Nazwa użytkownika jest już zajęta");
+            throw new RequestException("Nazwa użytkownika jest już zajęta", "username: nieprawidłowa wartość");
         }
         if(userRepo.existsByEmail(userForm.getEmail())) {
-            throw new RequestException("Istnieje konto z podanym adresem email");
+            throw new RequestException("Istnieje konto z podanym adresem email", "email: nieprawidłowa wartość");
         }
         User user = userRepo.save(userForm.toUser(passwordEncoder));
         token = user.getRegistrationToken();
@@ -42,7 +43,7 @@ public class RegistrationController {
     public ResponseEntity<UserDTO> confirmRegistration(@PathVariable("username") String username,
                                            @PathVariable("registrationToken") String registrationToken) {
         if(!userRepo.existsByUsername(username)) {
-            throw new RequestException("Brak treści, nieprawidłowa ścieżka");
+            throw new CustomNoSuchElementException(username);
         }
         User user = userRepo.findByUsername(username);
         if (user.getRegistrationToken().equals(registrationToken)) {
@@ -50,6 +51,6 @@ public class RegistrationController {
             userRepo.save(user);
             return new ResponseEntity<UserDTO>(user.toDTO(), HttpStatus.CREATED);
         }
-        throw new RequestException("Nieprawidłowy kod rejestracji");
+        throw new CustomNoSuchElementException(registrationToken);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import skarbnikApp.DTO.PayOffDTO;
 import skarbnikApp.data.GradeRepository;
 import skarbnikApp.data.PayOffRepository;
+import skarbnikApp.services.CustomNoSuchElementException;
 import skarbnikApp.services.RequestException;
 
 import javax.validation.Valid;
@@ -26,9 +27,11 @@ public class PayOffController {
     @PostMapping(path = "/{gradeId}", consumes = "application/json")
     public ResponseEntity<PayOffDTO> addPayOff(@PathVariable("gradeId") Long gradeId,
                                                @Valid @RequestBody PayOffForm payOffForm) {
-        Grade grade = gradeRepo.findById(gradeId).orElseThrow();
+        Grade grade = gradeRepo.findById(gradeId).orElseThrow(
+                () -> new CustomNoSuchElementException(gradeId.toString())
+        );
         if(grade.getBudget().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RequestException("Brak środków do wypłaty");
+            throw new RequestException("Brak środków do wypłaty", "");
         }
         PayOff payOff = payOffForm.toPayOff(gradeId);
 
@@ -42,6 +45,7 @@ public class PayOffController {
             gradeRepo.save(grade);
             return new ResponseEntity<PayOffDTO>(payOff.toDTO(), HttpStatus.CREATED);
         }
-        throw new RequestException("Zbyt duża kwota wypłaty. Kwota nie może być wyższa niż: " + grade.getBudget());
+        throw new RequestException("Zbyt duża kwota wypłaty. Kwota nie może być wyższa niż: " + grade.getBudget(),
+                "value: nieprawidłowa wartość");
     }
 }

@@ -24,14 +24,14 @@ public class LoginController {
     public ResponseEntity<Boolean> login(@Valid @RequestBody UserFormLogin userForm) {
 
         if (!repo.existsByUsername(userForm.getUsername())) {
-            throw new RequestException("Nieprawidłowy login");
+            throw new RequestException("Nieprawidłowy login", "username: nieprawidłowa wartość");
         }
         User user = repo.findByUsername(userForm.getUsername());
         if(!passwordEncoder.matches(userForm.getPassword(), user.getPassword())) {
-            throw new RequestException("Nieprawidłowe hasło");
+            throw new RequestException("Nieprawidłowe hasło","password: nieprawidłowa wartość");
         }
         if(!user.isEnabled()) {
-            throw new RequestException("Konto nieaktywne");
+            throw new RequestException("Konto nieaktywne", "");
         }
         return ResponseEntity
                 .status(HttpStatus.OK)
