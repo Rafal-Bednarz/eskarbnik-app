@@ -26,7 +26,6 @@
         <module>e-skarbnik</module>
         <module>e-skarbnik-data</module>
         <module>e-skarbnik-domain</module>
-        <module>e-skarbnik-web</module>
         <module>e-skarbnik-security</module>
         <module>e-skarbnik-api</module>
     </modules>

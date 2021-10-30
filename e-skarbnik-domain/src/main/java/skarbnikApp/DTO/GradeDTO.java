@@ -15,6 +15,10 @@ public class GradeDTO {
     @Getter
     private final BigDecimal budget;
     @Getter
+    private final BigDecimal paymentsSum;
+    @Getter
+    private final BigDecimal payOffsSum;
+    @Getter
     private final List<StudentDTO> students;
     @Getter
     private final List<PayOffDTO> payOffs;

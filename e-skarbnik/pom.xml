@@ -38,12 +38,6 @@
             <version>${e-skarbnik.version}</version>
         </dependency>
         <dependency>
-            <groupId>szorstki</groupId>
-            <artifactId>e-skarbnik-web</artifactId>
-            <version>${e-skarbnik.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>

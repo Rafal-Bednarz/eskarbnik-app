@@ -23,10 +23,10 @@ public class SecurityController extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity security) throws Exception {
+
         security.requiresChannel()
                 .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
                 .requiresSecure();
-
 
         security.csrf().disable();
     security.authorizeRequests()

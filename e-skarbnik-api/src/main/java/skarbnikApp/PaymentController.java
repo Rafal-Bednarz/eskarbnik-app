@@ -49,7 +49,10 @@ public class PaymentController {
 
         BigDecimal newGradeBudget =
                 grade.getBudget().add(payment.getValue()).setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal newPaymentsSum = grade.getPaymentsSum().add(payment.getValue())
+                .setScale(2, RoundingMode.CEILING);
         grade.setBudget(newGradeBudget);
+        grade.setPaymentsSum(newPaymentsSum);
         gradeRepo.save(grade);
 
         return new ResponseEntity<PaymentDTO>(payment.toDTO(), HttpStatus.CREATED);

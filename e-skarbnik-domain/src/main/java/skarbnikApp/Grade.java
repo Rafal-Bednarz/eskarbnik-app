@@ -25,6 +25,10 @@ public class Grade {
 
     private BigDecimal budget = new BigDecimal(0);
 
+    private BigDecimal paymentsSum = new BigDecimal(0);
+
+    private BigDecimal payOffsSum = new BigDecimal(0);
+
     @ManyToMany(targetEntity = Student.class)
     private List<Student> students = Collections.emptyList();
 
@@ -49,7 +53,7 @@ public class Grade {
                 payOffs.add(payOff.toDTO());
             });
         }
-        return new GradeDTO(id.toString(), name, budget,
+        return new GradeDTO(id.toString(), name, budget, paymentsSum, payOffsSum,
                 students, payOffs);
     }
 }

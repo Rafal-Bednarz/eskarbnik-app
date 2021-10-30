@@ -41,7 +41,10 @@ public class PayOffController {
             grade.setPayOffs(payOffList);
             BigDecimal newGradeBudget = grade.getBudget().subtract(payOff.getValue())
                     .setScale(2, RoundingMode.CEILING);
+            BigDecimal newPayOffsSum = grade.getPayOffsSum().add(payOff.getValue())
+                    .setScale(2, RoundingMode.CEILING);
             grade.setBudget(newGradeBudget);
+            grade.setPayOffsSum(newPayOffsSum);
             gradeRepo.save(grade);
             return new ResponseEntity<PayOffDTO>(payOff.toDTO(), HttpStatus.CREATED);
         }

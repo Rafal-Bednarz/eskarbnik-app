@@ -28,9 +28,8 @@
             <version>${e-skarbnik.version}</version>
         </dependency>
         <dependency>
-            <groupId>szorstki</groupId>
-            <artifactId>e-skarbnik-web</artifactId>
-            <version>${e-skarbnik.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
