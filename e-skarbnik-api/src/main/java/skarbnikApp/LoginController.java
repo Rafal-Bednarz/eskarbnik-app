@@ -24,11 +24,11 @@ public class LoginController {
     public ResponseEntity<Boolean> login(@Valid @RequestBody UserFormLogin userForm) {
 
         if (!repo.existsByUsername(userForm.getUsername())) {
-            throw new RequestException("Nieprawidłowy login", "username: nieprawidłowa wartość");
+            throw new RequestException("Nieprawidłowy login", "username: nieprawidłowa wartość <- błąd walidacji");
         }
         User user = repo.findByUsername(userForm.getUsername());
         if(!passwordEncoder.matches(userForm.getPassword(), user.getPassword())) {
-            throw new RequestException("Nieprawidłowe hasło","password: nieprawidłowa wartość");
+            throw new RequestException("Nieprawidłowe hasło","password: nieprawidłowa wartość <- błąd walidacji");
         }
         if(!user.isEnabled()) {
             throw new RequestException("Konto nieaktywne", "");

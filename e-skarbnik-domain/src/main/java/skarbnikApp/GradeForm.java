@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 @Data
 public class GradeForm {
 
-    @NotNull(message="pole nie może być puste")
+    @NotNull(message="musisz podać nazwę")
     @Size(min = 1, max = 10, message = "nazwa klasy musi mieć od 1 do 10 znaków")
     private String name;
 

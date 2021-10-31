@@ -1,19 +1,25 @@
 package skarbnikApp;
 
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import skarbnikApp.services.RequestException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(path = "/logout")
+@CrossOrigin(origins = "*")
 public class LogoutController {
 
     @PostMapping
-    public void logout() {
-        //reset session
-        SecurityContext session = SecurityContextHolder.getContext();
-        session.setAuthentication(null);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(HttpServletRequest request) {
+
+        try {
+            request.logout();
+        } catch (ServletException e) {
+            throw new RequestException("błąd serwera", "");
+        }
     }
 }

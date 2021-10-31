@@ -49,6 +49,6 @@ public class PayOffController {
             return new ResponseEntity<PayOffDTO>(payOff.toDTO(), HttpStatus.CREATED);
         }
         throw new RequestException("Zbyt duża kwota wypłaty. Kwota nie może być wyższa niż: " + grade.getBudget(),
-                "value: nieprawidłowa wartość");
+                "value: nieprawidłowa wartość <- podaj mniejszą kwotę");
     }
 }

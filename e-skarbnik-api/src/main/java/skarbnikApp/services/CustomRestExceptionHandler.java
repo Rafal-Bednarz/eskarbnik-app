@@ -22,14 +22,18 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
-        List<String> messages = new ArrayList<String>();
+        List<String> errors = new ArrayList<String>();
+        List<String> messages = new ArrayList<>();
         for (FieldError error : ex.getFieldErrors()) {
-            messages.add(error.getField() + ": "+ error.getDefaultMessage());
+            errors.add(error.getField() + ": "+ error.getDefaultMessage() + " <- błąd walidacji");
+        }
+        for (FieldError error : ex.getFieldErrors()) {
+            messages.add(error.getDefaultMessage());
         }
 
         ApiError apiError =
-                new ApiError(HttpStatus.BAD_REQUEST, "błąd walidacji",
-                        !messages.isEmpty() ? messages.get(0) : "");
+                new ApiError(HttpStatus.BAD_REQUEST, !messages.isEmpty() ? messages.get(0) : "",
+                        !errors.isEmpty() ? errors.get(0) : "");
         return handleExceptionInternal(
                 ex, apiError, headers, apiError.getStatus(), request);
     }
