@@ -10,6 +10,7 @@ import skarbnikApp.DTO.PayOffDTO;
 import skarbnikApp.DTO.StudentDTO;
 import skarbnikApp.data.*;
 import skarbnikApp.services.CustomNoSuchElementException;
+import skarbnikApp.services.RequestException;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -64,19 +65,20 @@ public class GradeController {
         Grade grade = gradeRepo.findById(gradeId).orElseThrow(
                 () -> new CustomNoSuchElementException(gradeId.toString())
         );
-        if (grades.contains(grade)) {
-            grade.getStudents().forEach(student -> {
-                student.setPayments(Collections.emptyList());
-                paymentRepo.deleteAllByStudentId(student.getId());
-            });
-            grade.setStudents(Collections.emptyList());
-            studentRepo.deleteAllByGradeId(gradeId);
-            grade.setPayOffs(Collections.emptyList());
-            payOffRepo.deleteAllByGradeId(gradeId);
-            grades.remove(grade);
-            userRepo.save(usr);
-            gradeRepo.deleteById(gradeId);
+        if (!grades.contains(grade)) {
+            throw new RequestException("Nieprawidłowa ścieżka", gradeId + " <- nieprawidłowa wartość");
         }
+        grade.getStudents().forEach(student -> {
+            student.setPayments(Collections.emptyList());
+            paymentRepo.deleteAllByStudentId(student.getId());
+        });
+        grade.setStudents(Collections.emptyList());
+        studentRepo.deleteAllByGradeId(gradeId);
+        grade.setPayOffs(Collections.emptyList());
+        payOffRepo.deleteAllByGradeId(gradeId);
+        grades.remove(grade);
+        userRepo.save(usr);
+        gradeRepo.deleteById(gradeId);
     }
     @PutMapping(path = "/{gradeId}/change")
     public ResponseEntity<GradeDTO> changeGradeName(@Valid @RequestBody GradeForm newName,

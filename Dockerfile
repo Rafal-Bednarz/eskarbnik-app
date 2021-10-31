@@ -4,7 +4,6 @@ COPY e-skarbnik-api eskarbnik-spa/e-skarbnik-api
 COPY e-skarbnik-data eskarbnik-spa/e-skarbnik-data
 COPY e-skarbnik-domain eskarbnik-spa/e-skarbnik-domain
 COPY e-skarbnik-security eskarbnik-spa/e-skarbnik-security
-COPY e-skarbnik-web eskarbnik-spa/e-skarbnik-web
 COPY lib eskarbnik-spa/lib
 COPY Dockerfile eskarbnik-spa/
 COPY system.properties eskarbnik-spa/
