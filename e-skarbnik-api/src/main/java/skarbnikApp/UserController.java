@@ -13,11 +13,9 @@ import skarbnikApp.data.*;
 
 import java.util.Collections;
 
-
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping(path = "/users", produces = "application/json")
+@RequestMapping(path = "/user", produces = "application/json")
 public class UserController {
 
     private final UserRepository userRepo;

@@ -11,7 +11,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/contact", produces = "application/json")
-@CrossOrigin(origins = "*")
 public class ContactController {
 
     private final SpringMailService mailService;

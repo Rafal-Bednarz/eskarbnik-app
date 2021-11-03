@@ -19,7 +19,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping(path = "/grades", produces = "application/json")
 public class GradeController {
 

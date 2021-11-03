@@ -17,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/payOffs", produces = "application/json")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class PayOffController {
 

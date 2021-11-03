@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping(path = "/students", produces = "application/json")
 @RequiredArgsConstructor
 public class StudentController {

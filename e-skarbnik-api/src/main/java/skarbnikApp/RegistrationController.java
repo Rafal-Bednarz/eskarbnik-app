@@ -15,7 +15,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/registration", produces = "application/json")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class RegistrationController {
 

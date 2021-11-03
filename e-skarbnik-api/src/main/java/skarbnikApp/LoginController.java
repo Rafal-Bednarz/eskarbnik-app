@@ -1,6 +1,7 @@
 package skarbnikApp;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,8 +11,6 @@ import skarbnikApp.services.RequestException;
 
 import javax.validation.Valid;
 
-
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/login")
 @RequiredArgsConstructor
