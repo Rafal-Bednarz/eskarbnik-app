@@ -75,7 +75,7 @@ public class User implements UserDetails {
                 grades.add(grade.toDTO());
             });
         }
-        return new UserDTO(username, grades);
+        return new UserDTO(username, email, grades);
     }
 
 }

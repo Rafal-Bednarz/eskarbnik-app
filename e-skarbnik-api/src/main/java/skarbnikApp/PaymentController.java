@@ -38,22 +38,18 @@ public class PaymentController {
             throw new CustomNoSuchElementException("/" + gradeId + "/" + studentId);
         }
         Payment payment = form.toPayment(studentId);
-        List<Payment> payments = student.getPayments();
-        payments.add(paymentRepo.save(payment));
+        paymentRepo.save(payment);
 
         BigDecimal newStudentPaymentSum = student.getPaymentsSum().add(payment.getValue())
                 .setScale(2, RoundingMode.HALF_EVEN);
-        student.setPaymentsSum(newStudentPaymentSum);
-        studentRepo.save(student);
 
         BigDecimal newGradeBudget =
                 grade.getBudget().add(payment.getValue()).setScale(2, RoundingMode.HALF_EVEN);
         BigDecimal newPaymentsSum = grade.getPaymentsSum().add(payment.getValue())
                 .setScale(2, RoundingMode.CEILING);
-        grade.setBudget(newGradeBudget);
-        grade.setPaymentsSum(newPaymentsSum);
-        gradeRepo.save(grade);
-
+        gradeRepo.updateGradeWhenAddPayments(gradeId, newPaymentsSum, newGradeBudget);
+        studentRepo.updateStudent(newStudentPaymentSum, studentId);
+        studentRepo.updateStudentPayments(studentId, payment.getId());
         return new ResponseEntity<PaymentDTO>(payment.toDTO(), HttpStatus.CREATED);
     }
 }

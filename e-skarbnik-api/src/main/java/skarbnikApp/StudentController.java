@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import skarbnikApp.DTO.PaymentDTO;
 import skarbnikApp.DTO.StudentDTO;
 import skarbnikApp.data.GradeRepository;
 import skarbnikApp.data.PaymentRepository;
@@ -27,21 +26,21 @@ public class StudentController {
     @PostMapping(path = "/{gradeId}", consumes = "application/json")
     public ResponseEntity<StudentDTO> addStudent(@PathVariable("gradeId") Long gradeId,
                                                  @Valid @RequestBody StudentForm studentForm) {
-            Grade grade = gradeRepo.findById(gradeId).orElseThrow(
-                    () -> new CustomNoSuchElementException(gradeId.toString())
-            );
-            Student student = studentRepo.save(studentForm.toStudent(gradeId));
-            grade.getStudents().add(student);
-            gradeRepo.save(grade);
+        if(gradeRepo.existsById(gradeId)) {
+            Student student = studentForm.toStudent(gradeId);
+            gradeRepo.updateGradeStudentsWhenAddStudent(gradeId, studentRepo.save(student).getId());
+
             return new ResponseEntity<StudentDTO>(student.toDTO(), HttpStatus.CREATED);
+        } else {
+            throw new CustomNoSuchElementException(gradeId.toString());
+        }
     }
-    @GetMapping(path = "/{studentId}/payments")
-    public ResponseEntity<List<PaymentDTO>> getPaymentsByStudentId(@PathVariable("studentId") Long studentId) {
+    @GetMapping(path = "/{studentId}")
+    public ResponseEntity<StudentDTO> getStudent(@PathVariable("studentId") Long studentId) {
         Student student = studentRepo.findById(studentId).orElseThrow(
-                () -> new CustomNoSuchElementException(studentId.toString())
-        );
-        List<PaymentDTO> payments = student.toDTO().getPayments();
-        return new ResponseEntity<List<PaymentDTO>>(payments, HttpStatus.OK);
+                () -> new CustomNoSuchElementException(studentId.toString()));
+
+        return new ResponseEntity<StudentDTO>(student.toDTO(), HttpStatus.OK);
     }
 
 
@@ -60,8 +59,8 @@ public class StudentController {
         }
         student.setPayments(Collections.emptyList());
         paymentRepo.deleteAllByStudentId(studentId);
-        students.remove(student);
+
+        gradeRepo.updateGradeStudentsWhenDeleteStudent(gradeId, studentId);
         studentRepo.deleteById(studentId);
-        gradeRepo.save(grade);
     }
 }

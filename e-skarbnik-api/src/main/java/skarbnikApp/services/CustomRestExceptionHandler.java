@@ -40,7 +40,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CustomNoSuchElementException.class)
     public ResponseEntity<Object> handleMethodNoSuchElement(CustomNoSuchElementException ex,
                                                             WebRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND
                 , "Nieprawidłowa ścieżka" , ex.getError());
         return handleExceptionInternal(ex, apiError, HttpHeaders.EMPTY, apiError.getStatus(), request);
     }

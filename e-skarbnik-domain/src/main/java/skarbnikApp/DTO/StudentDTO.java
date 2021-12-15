@@ -14,7 +14,7 @@ public class StudentDTO {
     @Getter
     private final String fullname;
     @Getter
-    private final BigDecimal paymentSum;
+    private final BigDecimal paymentsSum;
     @Getter
     private final List<PaymentDTO> payments;
 

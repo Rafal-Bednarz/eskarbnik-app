@@ -13,18 +13,18 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class UserFormRegistration {
 
-    @NotNull(message = "musisz podać nazwę użytkownika")
+    @NotNull(message = "Musisz podać nazwę użytkownika")
     @Pattern(regexp = "^[A-Za-z0-9]{3}[A-Za-z0-9]*$",
-            message = "nazwa musi mieć conajmniej 3 znaki, lub użyto niedopuszczalnych znaków")
+            message = "Nazwa musi mieć conajmniej 3 znaki, lub użyto niedopuszczalnych znaków")
     private final String username;
 
-    @NotNull(message = "musisz podac email")
-    @Email(message = "nieprawidłowy format adresu email")
+    @NotNull(message = "Musisz podac email")
+    @Email(message = "Nieprawidłowy format adresu email")
     private final String email;
 
-    @NotNull(message = "musisz podać hasło")
+    @NotNull(message = "Musisz podać hasło")
     @Pattern(regexp = "^[A-Za-z0-9!@#$%&?]{5}[A-Za-z0-9!@#$%&?]*$",
-            message = "hasło musi mieć conajmniej 5 znaków, lub użyto niedopuszczalnych znaków")
+            message = "Hasło musi mieć conajmniej 5 znaków, lub użyto niedopuszczalnych znaków")
     private final String password;
 
     public User toUser(PasswordEncoder passwordEncoder) {

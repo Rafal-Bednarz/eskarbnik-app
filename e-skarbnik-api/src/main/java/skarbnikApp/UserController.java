@@ -44,8 +44,8 @@ public class UserController {
             grade.setStudents(Collections.emptyList());
             studentRepo.deleteAllByGradeId(grade.getId());
         });
-        user.setGrades(Collections.emptyList());
-        userRepo.save(user);
+
+        userRepo.deleteAllUserGrades(user.getId());
         gradeRepo.deleteAllByUserId(user.getId());
         userRepo.deleteById(user.getId());
 

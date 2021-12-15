@@ -48,12 +48,9 @@ public class GradeController {
     public ResponseEntity<GradeDTO> addGrade(@Valid @RequestBody GradeForm gradeForm,
                                              @AuthenticationPrincipal User user) {
 
-        User usr = userRepo.findByUsername(user.getUsername());
-        Grade grade = gradeRepo.save(gradeForm.toGrade(usr.getId()));
-        List<Grade> grades = usr.getGrades();
-        grades.add(grade);
-        usr.setGrades(grades);
-        userRepo.save(usr);
+        Grade grade = gradeRepo.save(gradeForm.toGrade(user.getId()));
+        userRepo.updateUserWhenAddGrade(user.getId(), grade.getId());
+
         return new ResponseEntity<GradeDTO>(grade.toDTO(), HttpStatus.CREATED);
     }
     @DeleteMapping(path = "/{gradeId}/delete")
@@ -75,8 +72,7 @@ public class GradeController {
         studentRepo.deleteAllByGradeId(gradeId);
         grade.setPayOffs(Collections.emptyList());
         payOffRepo.deleteAllByGradeId(gradeId);
-        grades.remove(grade);
-        userRepo.save(usr);
+        userRepo.updateUserWhenDeleteGrade(user.getId(), gradeId);
         gradeRepo.deleteById(gradeId);
     }
     @PutMapping(path = "/{gradeId}/change")
@@ -87,7 +83,6 @@ public class GradeController {
                 () -> new CustomNoSuchElementException(gradeId.toString())
         );
         grade.setName(newName.getName());
-        gradeRepo.save(grade);
         return new ResponseEntity<GradeDTO>(grade.toDTO(), HttpStatus.CREATED);
     }
     @GetMapping(path = "/{gradeId}/students")

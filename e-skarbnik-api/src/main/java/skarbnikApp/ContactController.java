@@ -19,7 +19,7 @@ public class ContactController {
     @PostMapping(consumes = "application/json")
     public void contactUs(@Valid @RequestBody MailMessage message) {
         String sendTo = "rmb@vp.pl";
-            mailService.sendMail(sendTo,
-                    message.getSubject(), message.getMessage());
+            mailService.sendMessage(sendTo,
+                    message.getSubject(), message.getMessage(),false);
     }
 }

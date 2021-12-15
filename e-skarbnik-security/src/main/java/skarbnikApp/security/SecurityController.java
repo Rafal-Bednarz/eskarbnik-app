@@ -45,7 +45,7 @@ public class SecurityController extends WebSecurityConfigurerAdapter {
             .and().csrf()
             .ignoringAntMatchers("/login", "/logout", "/registration/**/**", "/contact",
                     "/swagger-ui/")
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).disable();
     }
     @Bean
     public PasswordEncoder encoder() {
@@ -65,7 +65,8 @@ public class SecurityController extends WebSecurityConfigurerAdapter {
                 registry.addMapping("/**")
                         .allowedOrigins(origins)
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .maxAge(3600)
+                     //   .maxAge(3600)
+
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }

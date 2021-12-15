@@ -13,7 +13,6 @@ import skarbnikApp.services.RequestException;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/payOffs", produces = "application/json")
@@ -32,19 +31,15 @@ public class PayOffController {
         if(grade.getBudget().compareTo(BigDecimal.ZERO) <= 0) {
             throw new RequestException("Brak środków do wypłaty", "");
         }
-        PayOff payOff = payOffForm.toPayOff(gradeId);
-
-        if (grade.getBudget().compareTo(BigDecimal.ZERO) > 0 && grade.getBudget().compareTo(payOff.getValue()) >= 0) {
-            List<PayOff> payOffList = grade.getPayOffs();
-            payOffList.add(payOffRepo.save(payOff));
-            grade.setPayOffs(payOffList);
+        if (grade.getBudget().compareTo(BigDecimal.ZERO) > 0
+                && grade.getBudget().compareTo(new BigDecimal(payOffForm.getValue())) >= 0) {
+            PayOff payOff = payOffRepo.save(payOffForm.toPayOff(gradeId));
             BigDecimal newGradeBudget = grade.getBudget().subtract(payOff.getValue())
                     .setScale(2, RoundingMode.CEILING);
             BigDecimal newPayOffsSum = grade.getPayOffsSum().add(payOff.getValue())
                     .setScale(2, RoundingMode.CEILING);
-            grade.setBudget(newGradeBudget);
-            grade.setPayOffsSum(newPayOffsSum);
-            gradeRepo.save(grade);
+            gradeRepo.updateGradeWhenAddPayOff(gradeId, newGradeBudget, newPayOffsSum);
+            gradeRepo.updateGradePayOffs(gradeId, payOff.getId());
             return new ResponseEntity<PayOffDTO>(payOff.toDTO(), HttpStatus.CREATED);
         }
         throw new RequestException("Zbyt duża kwota wypłaty. Kwota nie może być wyższa niż: " + grade.getBudget(),
