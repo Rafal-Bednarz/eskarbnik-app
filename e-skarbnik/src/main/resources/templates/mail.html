@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        p {
+            font-family:  Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <p style="font-size: medium">Witaj <span th:text="${username}"></span></p>
+    <p>Poniżej znajduje się link aktywacyjny.
+        Kliknij "aktywuj" lub skopiuj link do okna przeglądarki,
+        aby aktywować swoje konto i korzystaj w pełni z możliwości aplikacji Eskarbnik.</p>
+    <h2 style="
+
+            padding: 0.5em 0.5em 0.5em 0.5em;
+            background-color: darkcyan;
+            border: 1px solid black;
+            border-radius: 8px;
+            margin-left: 20%;
+            margin-right: 20%;
+            width: max-content;
+            height: max-content;
+            text-align: center;">
+        <a style="pointer-events: none;
+            cursor: default;
+            text-decoration: none;
+            color: white;"
+             th:href="@{${link}}">aktywuj</a></h2>
+    <a th:text="${link}"></a>
+    <em><p>Pozdrawiamy<br/>Zespół Eskarbnik</p></em>
+</body>
+</html>
