@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import skarbnikApp.security.SecurityException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,11 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleMethodRequest(RequestException ex, WebRequest request) {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST,  ex.getMessage(), ex.getError());
+        return handleExceptionInternal(ex, apiError, HttpHeaders.EMPTY, apiError.getStatus(), request);
+    }
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<Object> handleMethodSecurity(SecurityException ex, WebRequest request) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex.getError());
         return handleExceptionInternal(ex, apiError, HttpHeaders.EMPTY, apiError.getStatus(), request);
     }
 }

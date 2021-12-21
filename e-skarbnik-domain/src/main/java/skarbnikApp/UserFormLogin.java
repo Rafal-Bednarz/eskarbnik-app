@@ -1,21 +1,16 @@
 package skarbnikApp;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 @RequiredArgsConstructor
-public class UserFormLogin {
-    @Getter
-    @NotNull(message = "Musisz podać nazwę użytkownika")
-    @Pattern(regexp = "^[A-Za-z0-9]{3}[A-Za-z0-9]*$",
-            message = "Nazwa musi mieć conajmniej 3 znaki, lub użyto niedopuszczalnych znaków")
+@Data
+public class UserFormLogin implements Serializable {
+
+    private static final long serialVersionUID = 523498L;
+
     private final String username;
 
-    @Getter
-    @NotNull(message = "Musisz podać hasło")
-    @Pattern(regexp = "^[A-Za-z0-9!@#$%&?]{5}[A-Za-z0-9!@#$%&?]*$",
-            message = "Hasło musi mieć conajmniej 5 znaków, lub użyto niedopuszczalnych znaków")
     private final String password;
 }

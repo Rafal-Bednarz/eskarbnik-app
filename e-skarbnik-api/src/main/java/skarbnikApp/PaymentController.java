@@ -13,7 +13,6 @@ import skarbnikApp.services.CustomNoSuchElementException;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/payments", produces = "application/json")
