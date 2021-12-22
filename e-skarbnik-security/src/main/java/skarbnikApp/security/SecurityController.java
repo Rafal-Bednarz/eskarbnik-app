@@ -39,17 +39,13 @@ public class SecurityController extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity security) throws Exception {
 
-        //for Heroku
-        security.requiresChannel()
-                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-                .requiresSecure();
-
     security.authorizeRequests()
             .antMatchers( "/login", "/registration/**/**", "/contact",
                     "/swagger-ui/").permitAll()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .anyRequest()
             .authenticated()
+            .and().httpBasic()
             .and()
             .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -58,7 +54,7 @@ public class SecurityController extends WebSecurityConfigurerAdapter {
             .and().csrf()
             .ignoringAntMatchers("/login", "/logout", "/registration/**/**", "/contact",
                     "/swagger-ui/")
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).disable();
     security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
     @Bean
@@ -81,8 +77,7 @@ public class SecurityController extends WebSecurityConfigurerAdapter {
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                      //   .maxAge(3600)
 
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .allowedHeaders("*");
             }
         };
     }
