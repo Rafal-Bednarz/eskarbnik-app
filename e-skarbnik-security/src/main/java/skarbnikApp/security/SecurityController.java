@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -41,20 +40,19 @@ public class SecurityController extends WebSecurityConfigurerAdapter {
 
     security.authorizeRequests()
             .antMatchers( "/login", "/registration/**/**", "/contact",
-                    "/swagger-ui/").permitAll()
+                    "/swagger-ui/**/**/", "/swagger-resources/**/**/", "/v2/api-docs").permitAll()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .anyRequest()
             .authenticated()
-            .and().httpBasic()
+            .and()
+            .httpBasic()
             .and()
             .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().logout().logoutUrl("/logout").invalidateHttpSession(true).clearAuthentication(true)
-            .and().cors()
-            .and().csrf()
-            .ignoringAntMatchers("/login", "/logout", "/registration/**/**", "/contact",
-                    "/swagger-ui/")
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).disable();
+            .and()
+            .cors()
+            .and().csrf().disable();
+
     security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
     @Bean

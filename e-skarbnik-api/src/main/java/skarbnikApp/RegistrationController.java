@@ -41,7 +41,7 @@ public class RegistrationController {
         User user = userForm.toUser(passwordEncoder);
         Map<String, Object> model = new HashMap<>();
         model.put("username", user.getUsername());
-        model.put("link", frontUrl + "/e-skarbnik-ui/" + "/registration/" + user.getUsername() + "/" + user.getRegistrationToken());
+        model.put("link", frontUrl + "/e-skarbnik-ui/registration/" + user.getUsername() + "/" + user.getRegistrationToken());
         try {
             mailService.sendMailWithTemplate(user.getEmail(), "Link aktywacyjny", model);
         } catch (Exception e) {
